@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/postForm.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+          integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<div th:replace="~{fragment/fragmentHeader :: header}"></div>
+<div class="container">
+    <h2 class="writing-header">게시판 글 쓰기</h2>
+    <form id="form" class="frm" th:action="@{/posts/new(prevUri=${path})}" th:object="${post}" method="post" enctype="multipart/form-data">
+        <div class="msg" th:if="${#fields.hasErrors('title')}">
+            <i class="fa fa-exclamation-circle"></i><span th:errors="*{title}"></span>
+        </div>
+        <input type="text" th:field="*{title}" placeholder="제목을 입력해 주세요." ><br>
+        <input type="file" th:field="*{files}" multiple accept="image/*, .pdf, .docx" onchange="validateFiles(this)" />
+        <div class="msg" th:if="${#fields.hasErrors('content')}">
+            <i class="fa fa-exclamation-circle"></i><span th:errors="*{content}"></span>
+        </div>
+        <textarea rows="20" th:field="*{content}" placeholder="내용을 입력해 주세요."></textarea><br>
+        <button id="writeBtn" class="btn btn-write"><i class="fa fa-pencil"></i> 등록</button>
+        <button id="cancelBtn" class="btn btn-cancel"
+                th:attr="data-path=${path}"
+                onclick="goBack(this)"
+                type="button"><i class="fa-solid fa-xmark"></i> 취소</button>
+    </form>
+</div>
+<script>
+    function validateFiles(input) {
+        if (input.files.length > 4) {
+            alert("최대 4개의 파일만 업로드할 수 있습니다.");
+        }
+    }
+
+    function goBack(button) {
+        const path = button.getAttribute('data-path');
+
+        if (confirm('취소하시겠습니까?')) {
+            location.href = location.origin + path;
+        }
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Board</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/post.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+          integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://kit.fontawesome.com/45688b732c.js" crossorigin="anonymous"></script>
+</head>
+<body>
+<div th:replace="~{fragment/fragmentHeader :: header}"></div>
+<div class="container">
+    <h2 class="writing-header" th:text="#{editPostPage.header}">게시판 글 수정</h2>
+    <form class="form" action="" th:object="${post}" method="post" enctype="multipart/form-data">
+        <div class="msg" th:if="${#fields.hasGlobalErrors()}">
+            <i class="fa fa-exclamation-circle"></i><span th:text="${#fields.globalErrors()[0]}"></span>
+        </div>
+        <div class="msg" th:if="${#fields.hasErrors('title')}">
+            <i class="fa fa-exclamation-circle"></i><span th:errors="*{title}"></span>
+        </div>
+        <input type="text" th:field="*{title}" th:placeholder="#{editPostPage.title}"><br>
+        <div class="file">
+            <p th:text="#{editPostPage.file}">첨부 파일:</p>
+            <ul>
+                <li th:each="filename, iterStat : ${post.fileNames}">
+                    <button type="button" class="btn-remove-file" th:data-file="${filename}" th:onclick="|deleteFile(this, ${postId})|">❌</button>
+                    <a th:text="${filename}">파일 다운로드</a>
+                    <input type="hidden" th:field="*{fileNames[__${iterStat.index}__]}">
+                </li>
+            </ul>
+        </div>
+        <div class="msg" th:if="${#fields.hasErrors('files')}">
+            <i class="fa fa-exclamation-circle"></i><span th:errors="*{files}"></span>
+        </div>
+        <input type="file" th:field="*{files}" multiple onchange="validateFiles(this)">
+        <div class="msg" th:if="${#fields.hasErrors('content')}">
+            <i class="fa fa-exclamation-circle"></i><span th:errors="*{content}"></span>
+        </div>
+        <textarea rows="20" th:field="*{content}" th:placeholder="#{editPostPage.content}"></textarea><br>
+
+        <button id="writeBtn" class="btn btn-write"><i class="fa fa-pencil"></i><span th:text="#{editPostPage.btn.edit}"> 등록</span></button>
+        <button id="cancelBtn" class="btn btn-cancel"
+                th:onclick="|if(confirm('취소하시겠습니까?')) location.href='@{/posts/{id}(id=${postId}, page=${param.page}, pageSize=${param.pageSize}, prevUri=${prevUri})}'|" type="button">
+            <i class="fa-solid fa-xmark"></i><span th:text="#{editPostPage.btn.cancel}"> 취소</span></button>
+        <button id="listBtn" class="btn btn-list"
+                th:onclick="|if(confirm('목록으로 돌아가시겠습니까?')) location.href='@{{prevUri}(prevUri=${prevUri}, option=${param.option}, keyword=${param.keyword}, page=${param.page}, pageSize=${param.pageSize})}'|" type="button">
+            <i class="fa fa-bars"></i><span th:text="#{editPostPage.btn.list}"> 목록</span></button>
+<!--        <button type="button" class="btn btn-list"-->
+<!--                th:if="${session.loginMember?.role?.name() == 'ADMIN'}"-->
+<!--                th:onclick="|if(confirm('목록으로 돌아가시겠습니까?')) location.href='@{{prevUri}(prevUri=${prevUri}, option=${param.option}, keyword=${param.keyword}, page=${param.page}, pageSize=${param.pageSize})}'|"><i class="fa fa-bars"></i> 목록</button>-->
+    </form>
+</div>
+<script th:inline="javascript">
+    function validateFiles(input) {
+        if (input.files.length > 4) {
+            alert("최대 4개의 파일만 업로드할 수 있습니다.");
+        }
+    }
+
+    function deleteFile(button, postId) {
+        const fileName = button.getAttribute("data-file");
+        const liElement = button.closest("li"); // 해당 버튼이 속한 <li> 요소 찾기
+        if (liElement) {
+            liElement.remove(); // 화면에서 삭제
+        }
+    }
+</script>
+</body>
+</html>

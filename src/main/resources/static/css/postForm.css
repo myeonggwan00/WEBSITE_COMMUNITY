@@ -1,0 +1,99 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.container {
+    width : 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between; /* 왼쪽과 오른쪽으로 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    border-bottom: 1px solid #ccc; /* 필요시 구분선 추가 */
+    padding-top: 50px;
+}
+
+.form-header-btn {
+    display: flex;
+    gap: 10px; /* 버튼들 사이에 간격을 줌 */
+    margin-bottom: 10px;
+}
+
+.form-header-text {
+    display: flex;
+    gap: 10px; /* 버튼들 사이에 간격을 줌 */
+    margin-bottom: 10px;
+}
+
+.writing-header {
+    margin: 0; /* 필요시 여백 조정 */
+}
+
+input#title {
+    width: 100%;
+    height: 35px;
+    margin: 10px 0px 5px 0px;
+    border: 1px solid #e9e8e8;
+    padding: 8px;
+    background: #f8f8f8;
+    outline-color: #e6e6e6;
+}
+
+input {
+    width: 100%;
+    height: 35px;
+    margin: 5px 0px 10px 0px;
+    border: 1px solid #e9e8e8;
+    padding: 8px;
+    background: #f8f8f8;
+    outline-color: #e6e6e6;
+}
+
+
+.frm > textarea {
+    width: 100%;
+    background: #f8f8f8;
+    margin: 0px 0px 5px 0px;
+    border: 1px solid #e9e8e8;
+    resize: none;
+    padding: 8px;
+    outline-color: #e6e6e6;
+}
+
+.frm {
+    width:100%;
+}
+
+.btn {
+    background-color: rgb(236, 236, 236); /* Blue background */
+    border: none; /* Remove borders */
+    color: black; /* White text */
+    padding: 6px 12px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 5px;
+}
+
+.btn:hover {
+    text-decoration: underline;
+}
+
+.msg {
+    height: 30px;
+    text-align: left;
+    font-size:16px;
+    color:red;
+    margin-bottom: -10px;
+}
+
+.msg > span {
+    margin-left: 5px;
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>BoardList</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+          integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<div th:replace="~{fragment/fragmentHeader :: header}"></div>
+<div style="text-align:center">
+    <div class="board-container">
+        <div class="search-container">
+            <form class="search-form" th:action th:object="${searchCondition}" method="get">
+                <select class="search-option" th:field="*{option}">
+                    <option th:each="searchOption : ${searchOptions}" th:value="${searchOption.option}"
+                            th:text="${searchOption.getDisplayName()}" th:selected="${searchOption.getOption() == searchCondition.getOption()}"></option>
+                </select>
+                <input type="text" name="keyword" class="search-input" th:value="${searchCondition.getKeyword()}" th:placeholder="#{postsPage.find.placeholder}">
+                <input type="submit" class="search-button" th:value="#{postsPage.btn.find}">
+            </form>
+            <!-- id="writeBtn" 삭제 -->
+            <button class="btn-write" th:onclick="|location.href='@{/posts/new}'|">
+                <i class="fa-solid fa-pencil"></i><span th:text="#{postsPage.btn.write}">글쓰기</span>
+            </button>
+        </div>
+        <table>
+            <tr>
+                <th class="no" th:text="#{postsPage.post.no}">번호</th>
+                <th class="title" th:text="#{postsPage.post.title}">제목</th>
+                <th class="writer" th:text="#{postsPage.post.writer}">작성자</th>
+                <th class="reg-date" th:text="#{postsPage.post.regDate}">등록일</th>
+                <th class="view-count" th:text="#{postsPage.post.viewCnt}">조회수</th>
+            </tr>
+            <tr th:each="post, stat : ${posts}">
+                <td class="no" th:text="${(page - 1) * pageSize + stat.index + 1}">1</td>
+                <td class="title"><a th:href="@{/posts/{id}(id=${post.id}, option=${searchCondition.getOption()}, keyword=${searchCondition.getKeyword()}, page=${param.page}, pageSize=${param.pageSize}, prevUri='/posts')}"><span th:text="${post.title}">테스트 진행중</span></a></td>
+                <td class="writer" th:text="${post.nickname}">테스터</td>
+                <td class="reg-date" th:text="${{post.createdAt}}">22:08:12</td>
+                <td class="view-count" th:text="${{post.viewCnt}}">1</td>
+            </tr>
+        </table>
+        <br>
+        <div class="paging-container">
+            <div class="paging" >
+                <a class="left-arrow" th:if="${pageHandler.isShowPrev()}"
+                   th:href="@{/posts(page=${pageHandler.getBeginPage()-1}, pageSize=${pageHandler.pageSize})}"><span>&lt;</span></a>
+                <a class="number" th:each="i : ${#numbers.sequence(pageHandler.beginPage, pageHandler.endPage)}"
+                   th:href="@{/posts(option=${searchCondition.getOption()},keyword=${searchCondition.getKeyword()}, page=${i}, pageSize=${pageHandler.pageSize})}" th:text="${i}"></a>
+                <a class="right-arrow" th:if="${pageHandler.isShowNext()}"
+                   th:href="@{/posts(page=${pageHandler.getEndPage()+1}, pageSize=${pageHandler.pageSize})}"><span>&gt;</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

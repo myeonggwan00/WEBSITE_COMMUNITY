@@ -1,0 +1,269 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Noto Sans KR", sans-serif;
+}
+
+.container {
+    width : 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.form {
+    width:100%;
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between; /* 왼쪽과 오른쪽으로 배치 */
+    align-items: center; /* 수직 가운데 정렬 */
+    border-bottom: 1px solid #ccc; /* 필요시 구분선 추가 */
+    padding-top: 50px;
+}
+
+.form-header-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.writing-header {
+    margin: 0; /* 필요시 여백 조정 */
+}
+
+.post-createdAt {
+    font-size: 14px;
+    color: #666; /* 연한 회색 */
+    /*vertical-align: bottom;*/
+    /*white-space: nowrap;*/
+}
+
+.form-header-btn {
+    display: flex;
+    gap: 10px; /* 버튼들 사이에 간격을 줌 */
+    margin-bottom: 10px;
+}
+
+input {
+    width: 100%;
+    height: 35px;
+    margin: 5px 0px 10px 0px;
+    border: 1px solid #e9e8e8;
+    padding: 8px;
+    background: #f8f8f8;
+    outline-color: #e6e6e6;
+}
+
+input#title {
+    width: 100%;
+    height: 35px;
+    margin: 10px 0px 5px 0px;
+    border: 1px solid #e9e8e8;
+    padding: 8px;
+    background: #f8f8f8;
+    outline-color: #e6e6e6;
+}
+
+div.file {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+div.file p {
+    margin-left: 2.5px;
+}
+
+div.file ul {
+    list-style: none; /* 리스트 앞의 점 제거 */
+    padding: 0; /* 기본 패딩 제거 */
+    margin: 0; /* 기본 마진 제거 */
+    display: flex;
+}
+
+div.file ul li {
+    margin-right: 5px; /* 항목 간의 간격 설정 (선택사항) */
+    white-space: nowrap; /* 줄 바꿈 방지 */
+    overflow: hidden; /* 넘치는 텍스트 숨김 */
+    text-overflow: ellipsis; /* "..." 표시 */
+    max-width: 150px; /* 최대 너비 설정 */
+}
+
+.form > textarea {
+    width: 100%;
+    background: #f8f8f8;
+    margin: 0px 0px 5px 0px;
+    border: 1px solid #e9e8e8;
+    resize: none;
+    padding: 8px;
+    outline-color: #e6e6e6;
+}
+
+.btn {
+    background-color: rgb(236, 236, 236); /* Blue background */
+    border: none; /* Remove borders */
+    color: black; /* White text */
+    padding: 6px 12px; /* Some padding */
+    font-size: 16px; /* Set a font size */
+    cursor: pointer; /* Mouse pointer on hover */
+    border-radius: 5px;
+}
+
+.btn-remove-file {
+    flex-shrink: 0; /* 버튼 크기 유지 */
+    margin-left: 5px;
+    background-color: white;
+    border: none; /* 버튼 테두리 없애기 */
+}
+.btn:hover {
+    text-decoration: underline;
+}
+
+.msg {
+    height: 30px;
+    text-align: left;
+    font-size:16px;
+    color:red;
+    margin-bottom: -10px;
+}
+
+.msg > span {
+    margin-left: 5px;
+}
+
+#commentList > ul {
+    border: 1px solid rgb(235, 236, 239);
+    border-bottom: 0;
+    margin-bottom: 8px;
+    list-style-type: none !important;
+}
+
+
+#commentList > ul > li {
+    background: #f8f8f8;
+    /*border-bottom: 1px solid rgb(235, 236, 239);*/
+    padding: 18px 18px 0 18px;
+}
+
+#commentList {
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 10px;
+}
+
+/* 댓글 리스트 부분 */
+.comment-item {
+    position: relative;
+}
+
+/* 사용자 이미지 관련 CSS */
+.comment-img {
+    font-size: 36px;
+    position: absolute;
+}
+
+/* 댓글 부분 CSS */
+.comment-area {
+    border-bottom: 1px solid rgb(235, 236, 239);
+}
+
+/* 댓글 작성자 CSS*/
+.commenter {
+    font-size: 12pt;
+    font-weight: bold;
+}
+
+/* 댓글 내용 부분 CSS*/
+.comment-content {
+    overflow-wrap: break-word;
+}
+
+/* 댓글 작성 시간, 수정, 삭제, 답글 쓰기 부분 CSS */
+.comment-bottom {
+    font-size: 9pt;
+    color: rgb(97, 97, 97);
+    padding: 8px 0 8px 0;
+}
+
+.comment-bottom > a {
+    color: rgb(97, 97, 97);
+    text-decoration: none;
+    margin: 0 6px 0 0;
+}
+
+/* 댓글 작성 시간(등록, 수정)*/
+.up_date {
+    margin: 0 8px 0 0;
+}
+
+/*--------------------------------------------------------------*/
+
+/* 댓글 작성창 부분 CSS */
+#comment-writebox, #reply-writebox, #comment-modifybox {
+    background-color: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+}
+
+/* 댓글 작성창의 사용자 부분 CSS */
+.commenter-writebox {
+    padding: 15px 20px 20px 20px;
+}
+
+/* 댓글 작성창의 댓글 내용 부분 CSS */
+.comment-writebox-content > textarea, .reply-writebox-content > textarea, .comment-modifybox-content > textarea {
+    display: block;
+    width: 100%;
+    min-height: 17px;
+    padding: 0 20px;
+    border: 0;
+    outline: 0;
+    font-size: 13px;
+    resize: none;
+    box-sizing: border-box;
+    background: transparent;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* 댓글 작성창의 등록 버튼 부분 CSS */
+#comment-writebox-bottom {
+    padding: 3px 10px 10px 10px;
+    min-height: 45px; /* 수정 */
+}
+
+/* 댓글 작성창의 등록 버튼 */
+#btn-write-comment {
+    color: #009f47;
+    background-color: #e0f8eb;
+    float: right;
+}
+
+
+#reply-writebox-bottom, #comment-modifybox-bottom {
+    padding: 3px 10px 10px 10px;
+    min-height: 45px;
+}
+
+/* 대댓글 등록 버튼 관련 CSS */
+#btn-write-reply, #btn-modify-comment {
+    color: #009f47;
+    background-color: #e0f8eb;
+    float: right;
+}
+
+/* 대댓글 취소 버튼 관련 CSS */
+#btn-cancel-reply, #btn-cancel-comment {
+    background-color: #eff0f2;
+    float: left;
+}
+
+.comment-area.child-comment {
+    margin-left: 20px; /* 자식 댓글에 대해 왼쪽 들여쓰기 */
+    padding-top: 8px;
+}

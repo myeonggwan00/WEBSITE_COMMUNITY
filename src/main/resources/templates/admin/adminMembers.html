@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+<div th:replace="~{fragment/fragmentHeader :: header}"></div>
+<div style="text-align:center">
+    <div class="board-container">
+        <div class="search-container">
+            <form class="search-form" th:action th:object="${searchCondition}" method="get">
+                <select class="search-option" th:field="*{option}">
+                    <option th:each="searchOption : ${searchOptions}" th:value="${searchOption.option}"
+                            th:text="${searchOption.getDisplayName()}" th:selected="${searchOption.getOption() == searchCondition.getOption()}"></option>
+                </select>
+                <input type="text" name="keyword" class="search-input" th:value="${searchCondition.getKeyword()}" th:placeholder="#{membersPage.find.placeholder}">
+                <input type="submit" class="search-button" th:value="#{membersPage.btn.find}">
+            </form>
+        </div>
+        <!-- 회원 목록 -->
+        <table id="user-table">
+            <tr>
+                <th class="no" th:text="#{membersPage.member.no}">번호</th>
+                <th class="login" th:text="#{membersPage.member.loginId}">아이디</th>
+                <th class="username" th:text="#{membersPage.member.username}">이름</th>
+                <th class="nickname" th:text="#{membersPage.member.nickname}">닉네임</th>
+                <th class="reg-date" th:text="#{membersPage.member.regDate}">가입일</th>
+                <th class="mod-date" th:text="#{membersPage.member.modDate}">수정일</th>
+                <th class="role" th:text="#{membersPage.member.role}">권한</th>
+                <th class="actions" th:text="#{membersPage.admin.actions}">관리</th>
+            </tr>
+            <tr th:each="member, stat : ${members}">
+                <td class="no" th:text="${(page - 1) * pageSize + stat.index + 1}">1</td>
+                <td class="loginId" th:text="${member.loginId}">asdf</td>
+                <td class="username" th:text="${member.username}">테스터</td>
+                <td class="nickname" th:text="${member.nickname}">테스터</td>
+                <td class="regDate" th:text="${{member.createdAt}}">22:08:12</td>
+                <td class="modDate" th:text="${{member.updatedAt}}">22:08:12</td>
+                <td class="role">
+                    <span th:if="${member.role.name() == 'USER'}">사용자</span>
+                    <span th:if="${member.role.name() == 'ADMIN'}">관리자</span>
+                </td>
+                <td class="actions">
+                    <div th:if="${member.username != 'admin'}">
+                        <form th:action="@{/admin/members/{id}/edit(id=${member.id})}" method="post" onsubmit="return checkRoleChange(this)">
+                            <input type="hidden" name="currentRole" th:value="${member.role.name()}" />
+                            <select name="newRole">
+                                <option value="">----</option>
+                                <option value="ADMIN" th:selected="${member.role.name() == 'ADMIN'}">관리자</option>
+                                <option value="USER" th:selected="${member.role.name() == 'USER'}">사용자</option>
+                            </select>
+                            <button class="btn-change"><span th:text="#{membersPage.admin.member.role.change}">변경</span></button>
+                        </form>
+                        |
+                        <form th:action="@{/admin/members/{id}/delete(id=${member.id}, page=${param.page}, pageSize=${param.pageSize})}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?')">
+                            <button class="btn-delete"><span th:text="#{membersPage.admin.member.delete}">강제 탈퇴</span></button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        <br>
+        <div class="paging-container">
+            <div class="paging" >
+                <a class="left-arrow" th:if="${pageHandler.isShowPrev()}"
+                   th:href="@{/admin/members(page=${pageHandler.getBeginPage()-1}, pageSize=${pageHandler.pageSize})}"><span>&lt;</span></a>
+                <a class="number" th:each="i : ${#numbers.sequence(pageHandler.beginPage, pageHandler.endPage)}"
+                   th:href="@{/admin/members(option=${searchCondition.getOption()},keyword=${searchCondition.getKeyword()}, page=${i}, pageSize=${pageHandler.pageSize})}" th:text="${i}"></a>
+                <a class="right-arrow" th:if="${pageHandler.isShowNext()}"
+                   th:href="@{/admin/members(page=${pageHandler.getEndPage()+1}, pageSize=${pageHandler.pageSize})}"><span>&gt;</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    function checkRoleChange(form) {
+        const currentRole = form.currentRole.value;
+        const selectedRole = form.newRole.value;
+
+        if (!selectedRole || selectedRole === "") {
+            alert("변경할 권한을 선택해주세요.");
+            return false;
+        }
+
+        if (currentRole === selectedRole) {
+            alert("같은 권한입니다.");
+            return false;
+        }
+
+        return true;
+    }
+</script>
+</html>
