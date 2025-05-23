@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" th:href="@{/css/registerForm.css}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+        integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <title>Register</title>
+</head>
+<body>
+<form th:action="@{/members/edit}" th:object="${member}" method="post">
+  <div class="title" th:text="#{editPage.title}">Register</div>
+
+  <div class="id-box">
+    <label for="loginId" th:text="#{editPage.id}">아이디</label>
+    <div class="msg" th:if="${#fields.hasErrors('loginId')}"><i class="fa fa-exclamation-circle"></i><span th:errors="*{loginId}">아이디 오류 메시지</span></div>
+    <br>
+    <input class="input-field" type="text" id="loginId" th:field="*{loginId}">
+  </div>
+
+  <div class="password-box">
+    <label for="password" th:text="#{editPage.pwd}">비밀번호</label>
+    <div class="msg" th:if="${#fields.hasErrors('password')}"><i class="fa fa-exclamation-circle"></i><span th:errors="*{password}">비밀번호 오류 메시지</span></div>
+    <br>
+    <input class="input-field" type="text" id="password" th:field="*{password}">
+  </div>
+
+  <div class="username-box">
+    <label for="username" th:text="#{editPage.name}">이름</label>
+    <div class="msg" th:if="${#fields.hasErrors('username')}"><i class="fa fa-exclamation-circle"></i><span th:errors="*{username}">이름 오류 메시지</span></div>
+    <br>
+    <input class="input-field" type="text" id="username" th:field="*{username}">
+  </div>
+
+  <div class="nickname-box">
+    <label for="nickname" th:text="#{editPage.nickname}">닉네임</label>
+    <div class="msg" th:if="${#fields.hasErrors('nickname')}"><i class="fa fa-exclamation-circle"></i><span th:errors="*{nickname}">닉네임 오류 메시지</span></div>
+    <br>
+    <input class="input-field" type="text" id="nickname" th:field="*{nickname}">
+  </div>
+
+  <button th:text="#{editPage.btn.edit}">회원 수정</button>
+</form>
+</body>
+</html>

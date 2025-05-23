@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" th:href="@{/css/loginForm.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css"
+          integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+<form th:action="@{/login}" th:object="${loginMember}" method="post">
+    <input type="hidden" name="redirectURL" th:value="${redirectURL}">
+    <h3 id="title" th:text="#{loginPage.title}">Login</h3>
+
+    <div id="msg" th:if="${#fields.hasGlobalErrors()}">
+        <i class="fa fa-exclamation-circle"></i>
+        <span th:each="err : ${#fields.globalErrors()}" th:text="${err}">글로벌 오류 메시지</span>
+    </div>
+
+    <input type="text" th:field="*{id}" th:placeholder="#{loginPage.id}" autofocus>
+
+    <input type="password" th:field="*{pwd}" th:placeholder="#{loginPage.pwd}">
+
+    <button th:text="#{loginPage.btn.login}">로그인</button>
+
+    <div>
+        <input type="checkbox" name="rememberId" th:field="*{rememberId}">
+        <label th:text="#{loginPage.check.rememberId}"> 아이디 기억</label>
+        |
+        <a th:text="#{loginPage.link.register}" th:href="@{/members/new}">회원가입</a>
+    </div>
+</form>
+</form>
+</body>
+</html>

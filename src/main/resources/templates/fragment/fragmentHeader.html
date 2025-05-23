@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+    <div id="menu" th:fragment="header">
+        <ul>
+            <li id="logo" th:text="#{homePage}">Developer</li>
+            <li th:if="${session.isEmpty() || session.loginMember.role.name() == 'USER'}">
+                <a th:href="@{/}" th:text="#{homePage.home}">Home</a></li>
+            <li th:if="${!session.isEmpty() && session.loginMember.role.name() == 'ADMIN'}">
+                <a th:href="@{/admin/members}" th:text="#{homePage.admin.members}">회원 관리</a>
+            </li>
+            <li th:if="${session.isEmpty() || session.loginMember.role.name() == 'USER'}">
+                <a th:href="@{/posts?option=&page=1&pageSize=10}" th:text="#{homePage.board}">Board</a>
+            </li>
+            <li th:if="${!session.isEmpty() && session.loginMember.role.name() == 'ADMIN'}">
+                <a th:href="@{/admin/posts}" th:text="#{homePage.admin.posts}">게시글 관리</a>
+            </li>
+            <li th:if="${!session.isEmpty()}">
+                <a th:href="@{/my/posts}" th:text="#{homePage.my}">나의 게시글</a>
+            </li>
+            <li><a th:href="${session.status} ? @{/logout} : @{/login}" th:text="${session.status} ? #{homePage.logout} : #{homePage.login}">Login</a></li>
+            <li th:if="${!session.isEmpty() && session.loginMember.role.name() == 'USER'}">
+                <a th:href="@{/members/edit}" th:text="#{homePage.editProfile}">Edit Profile</a>
+            </li>
+            <li th:if="${session.isEmpty() || session.loginMember.role.name() == 'USER'}">
+                <a th:href="${session.isEmpty()} ? @{/members/new} : @{/members/delete}" th:text="${session.isEmpty()} ? #{homePage.register} : #{homePage.deleteAccount}">Sign In</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
