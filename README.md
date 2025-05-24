@@ -11,7 +11,9 @@
 - Java 17
 - Spring Boot
 - MySQL
-- ORM: JDBC, JdbcTemplate, JPA
+- JDBC
+- SQL Mapper:JdbcTemplate
+- ORM: JPA
 - Thymeleaf
 
 ### 🔜 Front-End
