@@ -22,7 +22,6 @@ public class JdbcFileRepositoryV1 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, file.getPostId());
@@ -31,9 +30,7 @@ public class JdbcFileRepositoryV1 implements FileRepository {
             pstmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
 
             pstmt.executeUpdate();
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -107,15 +104,11 @@ public class JdbcFileRepositoryV1 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -130,16 +123,12 @@ public class JdbcFileRepositoryV1 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, postId);
             pstmt.setString(2, fileName);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -155,15 +144,11 @@ public class JdbcFileRepositoryV1 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, postId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -181,28 +166,14 @@ public class JdbcFileRepositoryV1 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, memberId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
-        }
-    }
-
-    private void attemptRollback(Connection con) {
-        if (con != null) {
-            try {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.warn("Rollback failed: {}", rollbackEx.getMessage());
-            }
         }
     }
 

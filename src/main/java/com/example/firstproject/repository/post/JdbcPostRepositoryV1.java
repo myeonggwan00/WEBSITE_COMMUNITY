@@ -27,7 +27,6 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, post.getMemberId());
@@ -36,10 +35,7 @@ public class JdbcPostRepositoryV1 implements PostRepository {
             pstmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             pstmt.setLong(5, post.getViewCnt());
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -59,7 +55,6 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             postStmt = con.prepareStatement(postSql, Statement.RETURN_GENERATED_KEYS);
 
@@ -90,10 +85,7 @@ public class JdbcPostRepositoryV1 implements PostRepository {
                 fileStmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
                 fileStmt.executeUpdate();
             }
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             if(rs != null) {
@@ -139,7 +131,6 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, updatePost.getTitle());
@@ -147,10 +138,7 @@ public class JdbcPostRepositoryV1 implements PostRepository {
             pstmt.setTimestamp(3, Timestamp.valueOf(updatePost.getUpdatedAt()));
             pstmt.setLong(4, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -166,15 +154,11 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -267,15 +251,11 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -291,15 +271,11 @@ public class JdbcPostRepositoryV1 implements PostRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, memberId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -864,16 +840,6 @@ public class JdbcPostRepositoryV1 implements PostRepository {
             throw new DbException(e);
         } finally {
             close(con, pstmt, rs);
-        }
-    }
-
-    private void attemptRollback(Connection con) {
-        if (con != null) {
-            try {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.warn("Rollback failed: {}", rollbackEx.getMessage());
-            }
         }
     }
 

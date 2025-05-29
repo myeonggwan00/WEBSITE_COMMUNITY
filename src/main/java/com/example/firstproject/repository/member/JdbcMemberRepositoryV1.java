@@ -25,7 +25,6 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, member.getLoginId());
@@ -35,10 +34,7 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
             pstmt.setString(5, member.getRole().toString());
             pstmt.setTimestamp(6, Timestamp.valueOf(member.getCreatedAt()));
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -53,7 +49,6 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
 
         try {
             con = DBConnectionUtils.getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, updateMemberDto.getLoginId());
@@ -63,10 +58,7 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
             pstmt.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
             pstmt.setLong(6, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -82,17 +74,13 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
 
         try {
             con = DBConnectionUtils.getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, role.toString());
             pstmt.setTimestamp(2, Timestamp.valueOf(LocalDateTime.now()));
             pstmt.setLong(3, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -225,15 +213,11 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -249,14 +233,10 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -624,16 +604,6 @@ public class JdbcMemberRepositoryV1 implements MemberRepository {
             throw new DbException(e);
         } finally {
             close(con, pstmt, rs);
-        }
-    }
-
-    private void attemptRollback(Connection con) {
-        if (con != null) {
-            try {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.warn("Rollback failed: {}", rollbackEx.getMessage());
-            }
         }
     }
 

@@ -27,7 +27,6 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false); // 트랜잭션 시작
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, comment.getPostId());
@@ -37,9 +36,7 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
             pstmt.setTimestamp(5, Timestamp.valueOf(comment.getCreatedAt()));
 
             pstmt.executeUpdate();
-            con.commit(); // 커밋
         } catch (SQLException e) {
-            attemptRollback(con); // 롤백 시도
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -55,17 +52,13 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false); // 트랜잭션 시작
 
             pstmt = con.prepareStatement(sql);
             pstmt.setString(1, updateCommentDto.getContent());
             pstmt.setTimestamp(2, Timestamp.valueOf(updateCommentDto.getUpdatedAt()));
             pstmt.setLong(3, id);
             pstmt.executeUpdate();
-
-            con.commit(); // 커밋
         } catch (SQLException e) {
-            attemptRollback(con); // 롤백 시도
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -81,15 +74,11 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false); // 트랜잭션 시작
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, memberId);
             pstmt.executeUpdate();
-
-            con.commit(); // 커밋
         } catch (SQLException e) {
-            attemptRollback(con); // 롤백 시도
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -105,15 +94,11 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, postId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con); // 롤백 시도
             throw new DbException(e);
         } finally {
             close(con, pstmt, null);
@@ -134,7 +119,6 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             deleteChildPstmt = con.prepareStatement(deleteChildSql);
             deleteChildPstmt.setLong(1, id);
@@ -143,10 +127,7 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
             deleteParentPstmt = con.prepareStatement(deleteParentSql);
             deleteParentPstmt.setLong(1, id);
             deleteParentPstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con); // 롤백 시도
             throw new DbException(e);
         } finally {
             close(con, deleteChildPstmt, null);
@@ -241,16 +222,6 @@ public class JdbcCommentRepositoryV1 implements CommentRepository {
             throw new DbException(e);
         } finally {
             close(con, pstmt, rs);
-        }
-    }
-
-    private void attemptRollback(Connection con) {
-        if (con != null) {
-            try {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.warn("Rollback failed: {}", rollbackEx.getMessage());
-            }
         }
     }
 

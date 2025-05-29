@@ -33,7 +33,6 @@ public class JdbcFileRepositoryV2 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, file.getPostId());
@@ -41,10 +40,7 @@ public class JdbcFileRepositoryV2 implements FileRepository {
             pstmt.setString(3, file.getFilePath());
             pstmt.setTimestamp(4, Timestamp.valueOf(LocalDateTime.now()));
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw Objects.requireNonNull(exTranslator.translate("save", sql, e), "save file failed");
         } finally {
             close(con, pstmt, null);
@@ -118,15 +114,11 @@ public class JdbcFileRepositoryV2 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, id);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw Objects.requireNonNull(exTranslator.translate("deleteById", sql, e), "delete file failed");
         } finally {
             close(con, pstmt, null);
@@ -141,16 +133,12 @@ public class JdbcFileRepositoryV2 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, postId);
             pstmt.setString(2, fileName);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw Objects.requireNonNull(exTranslator.translate("deleteByPostIdAndFileName", sql, e), "delete file failed");
         } finally {
             close(con, pstmt, null);
@@ -166,15 +154,11 @@ public class JdbcFileRepositoryV2 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, postId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch (SQLException e) {
-            attemptRollback(con);
             throw Objects.requireNonNull(exTranslator.translate("deleteByPostId", sql, e), "delete file failed");
         } finally {
             close(con, pstmt, null);
@@ -192,28 +176,14 @@ public class JdbcFileRepositoryV2 implements FileRepository {
 
         try {
             con = getConnection();
-            con.setAutoCommit(false);
 
             pstmt = con.prepareStatement(sql);
             pstmt.setLong(1, memberId);
             pstmt.executeUpdate();
-
-            con.commit();
         } catch(SQLException e) {
-            attemptRollback(con);
             throw Objects.requireNonNull(exTranslator.translate("deleteByMemberId", sql, e), "delete file failed");
         } finally {
             close(con, pstmt, null);
-        }
-    }
-
-    private void attemptRollback(Connection con) {
-        if (con != null) {
-            try {
-                con.rollback();
-            } catch (SQLException rollbackEx) {
-                log.warn("Rollback failed: {}", rollbackEx.getMessage());
-            }
         }
     }
 
